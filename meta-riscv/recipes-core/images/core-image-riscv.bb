@@ -18,7 +18,7 @@ IMAGE_INSTALL += "python-numpy python-subprocess python-ctypes python-html pytho
 IMAGE_INSTALL += "gcc binutils glibc glibc-dev libgcc libgcc-dev libstdc++ libstdc++-dev"
 
 # Advanced packages
-IMAGE_INSTALL += "cmake boost python-pip python-setuptools python-cython python-six python-pytest python-pandas"
+IMAGE_INSTALL += "cmake boost python-pip python-setuptools python-cython python-six python-pytest python-pandas jemalloc"
 
 IMAGE_LINGUAS = " "
 

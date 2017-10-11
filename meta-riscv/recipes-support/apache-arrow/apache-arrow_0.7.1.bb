@@ -11,22 +11,22 @@ Conversions to and from other in-memory data structures (e.g. Python's pandas li
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE.txt;md5=bbaa9c3a78459827a0298bdf18cd0dde"
 
-#SRCREV = "bcb29d081f26852c2d7b8329f542b1e81bfc9681"
-#SRC_URI = "\
-#     git://github.com/apache/arrow/;branch=master;protocol=git \
-#"
-
 SRC_URI = "\
        https://github.com/apache/arrow/archive/apache-arrow-0.7.1.tar.gz \
 "
 SRC_URI[md5sum] = "83877894c7a5e3261350c3b02f1caac8"
 SRC_URI[sha256sum] = "22667b9d3f4d36c2060d5ade8c904c528325ea4ffcea2e71671013addcd033af"
 
+SRC_URI_append += "file://arrow-cpp-cmakelists.patch;striplevel=2"
+SRC_URI_append += "file://arrow-cpp-thirdparty.patch;striplevel=2"
+
+PATCHTOOL="patch"
+
 S = "${WORKDIR}/arrow-apache-arrow-0.7.1/cpp" 
 
-DEPENDS += "boost python python-native python-numpy-native flatbuffers flatbuffers-native"
-inherit cmake texinfo
+DEPENDS += "cmake cmake-native boost python python-native python-numpy-native python-cython python-cython-native flatbuffers flatbuffers-native"
 
+inherit cmake texinfo
 
 export STAGING_INCDIR_NATIVE
 export STAGING_LIBDIR_NATIVE
@@ -34,8 +34,8 @@ export STAGING_INCDIR
 export STAGING_LIBDIR
 
 do_configure_prepend() {
-#export STAGING_INCDIR=${STAGING_INCDIR_NATIVE}
-#export STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE}
+export STAGING_INCDIR=${STAGING_INCDIR_NATIVE}
+export STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE}
 }
 
 cmake_do_compile()  {
@@ -61,8 +61,7 @@ EXTRA_OECMAKE += "-DARROW_PLASMA=on -DARROW_PYTHON=on -DPYTHON_EXECUTABLE=~/fire
 EXTRA_OEMAKE = "LIBTOOLFLAGS='--tag=CC'"
 
 DEPENDS_${PN} += "\
-    python python-numpy python-dev python-distutils python-numpy-native\
+    python python-numpy python-dev python-distutils python-numpy-native python-cython python-cython-native\
 "
 
-
-
+BBCLASSEXTEND = "native"

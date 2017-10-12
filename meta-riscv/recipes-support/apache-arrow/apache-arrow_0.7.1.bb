@@ -50,6 +50,8 @@ cmake_do_install() {
                 rm -f ${D}${infodir}/dir
         fi
 
+  mkdir ${D}/usr/bin/plasma-dir
+  mv ${D}/usr/bin/plasma_store ${D}/usr/bin/plasma-dir/plasma_store
   base_do_install
 }
 

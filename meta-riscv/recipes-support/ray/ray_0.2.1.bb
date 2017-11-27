@@ -54,7 +54,7 @@ cmake_do_install() {
 }
 
 
-EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release -DCMAKE_LINKER=/home/centos/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/riscv64-poky-linux/riscv64-poky-linux-ld -DPYTHON_EXECUTABLE=~/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/python-native/python2.7 -DFLATBUFFERS_COMPILER:FILEPATH=~/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/flatc"
+EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=${WORKDIR}/recipe-sysroot-native/usr/bin/python-native/python2.7 -DFLATBUFFERS_COMPILER:FILEPATH=${WORKDIR}/recipe-sysroot-native/usr/bin/flatc"
 
 EXTRA_OEMAKE += "LIBTOOLFLAGS='--tag=CC'"
 

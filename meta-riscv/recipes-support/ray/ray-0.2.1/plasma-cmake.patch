@@ -1,5 +1,5 @@
 --- ray-ray-0.2.1/src/plasma/CMakeLists.txt	2017-10-01 19:33:13.000000000 +0000
-+++ ray-ray-0.2.1-new/src/plasma/CMakeLists.txt	2017-11-27 19:36:58.609678869 +0000
++++ ray-ray-0.2.1-new/src/plasma/CMakeLists.txt	2017-11-27 20:16:28.214759120 +0000
 @@ -8,7 +8,8 @@
  # Include plasma
  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../thirdparty/arrow/python/cmake_modules)
@@ -21,7 +21,7 @@
  # include_directories("${CMAKE_CURRENT_LIST_DIR}/../")
  
  include_directories("${FLATBUFFERS_INCLUDE_DIR}")
-@@ -28,7 +31,22 @@
+@@ -28,7 +31,21 @@
  add_executable(plasma_manager
    plasma_manager.cc)
  
@@ -44,4 +44,3 @@
 +                           ${CMAKE_CURRENT_LIST_DIR}/../../python/ray/core/src/plasma/plasma_manager)
 +add_custom_target(copy_plasma_store ALL)
 +file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../apache-arrow/0.7.1-r0/image/usr/bin/plasma-dir/plasma_store DESTINATION ${CMAKE_BINARY_DIR}/src/plasma/)
-+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../apache-arrow/0.7.1-r0/image/usr/bin/plasma-dir/plasma_store DESTINATION ${CMAKE_CURRENT_LIST_DIR}/../../python/ray/core/src/plasma/)

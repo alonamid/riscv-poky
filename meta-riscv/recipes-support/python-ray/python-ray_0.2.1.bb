@@ -10,6 +10,11 @@ SRC_URI = "\
 SRC_URI[md5sum] = "6ec41e46a77b762fbb3c8e9079d26223"
 SRC_URI[sha256sum] = "544a5ce29fb802a7ef20e28b3eb3e872946fd452cf25aa1dbfa2a78344ee4951"
 
+SRC_URI_append += "file://py-setup.patch;striplevel=2"
+SRC_URI_append += "file://py-services.patch;striplevel=2"
+SRC_URI_append += "file://py-scripts.patch;striplevel=2"
+SRC_URI_append += "file://py-init.patch;striplevel=2"
+
 
 S = "${WORKDIR}/ray-ray-0.2.1/python"
 
@@ -18,12 +23,10 @@ DEPENDS += "redis boost python python-native python-numpy-native python-cython p
 DEPENDS += "python-pip python-setuptools python-cython python-six python-pytest python-pandas jemalloc python-pyarrow"
 DEPENDS += "python-redis python-flatbuffers python-cloudpickle python-click python-funcsigs python-psutil python-colorama"
 DEPENDS += "ray"
-DEPENDS += ""
 
 inherit setuptools
 
 EXTRA_OEMAKE += "LIBTOOLFLAGS='--tag=CC'"
-EXTRA_OEMAKE += ""
 
 DEPENDS_${PN} += "\
     python python-numpy python-dev python-distutils python-numpy-native python-cython python-cython-native apache-arrow\

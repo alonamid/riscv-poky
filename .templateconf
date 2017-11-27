@@ -1,2 +1,2 @@
 # Template settings
-TEMPLATECONF=${TEMPLATECONF:-meta-firesim/conf}
+TEMPLATECONF=${TEMPLATECONF:-meta-riscv/conf}

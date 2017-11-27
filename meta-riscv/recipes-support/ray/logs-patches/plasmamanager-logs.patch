@@ -1,0 +1,104 @@
+--- ray-ray-0.2.1/src/plasma/plasma_manager.cc	2017-10-01 19:33:13.000000000 +0000
++++ ray-ray-0.2.1-new/src/plasma/plasma_manager.cc	2017-11-27 01:32:22.143953135 +0000
+@@ -19,6 +19,7 @@
+ #include <poll.h>
+ #include <assert.h>
+ #include <netinet/in.h>
++#include <time.h>
+ 
+ /* C++ includes. */
+ #include <list>
+@@ -43,6 +44,13 @@
+ #include "state/task_table.h"
+ #include "state/db_client_table.h"
+ 
++#define FIRESIM_BUF_SIZE 190000
++
++uint64_t* firesim_profile_buffer1;
++uint64_t* firesim_profile_buffer_start1;
++char* firesim_profile_taskid_buffer1;
++char* firesim_profile_taskid_buffer_start1;
++
+ int handle_sigpipe(Status s, int fd) {
+   if (s.ok()) {
+     return 0;
+@@ -709,6 +717,16 @@
+                         int data_sock,
+                         void *context,
+                         int events) {
++
++  //get the cycle count
++  //store the cycle count in the buffer
++  //increase the buffer pointer by a word
++  uint64_t firesim_rdcycle;
++  asm volatile ("rdcycle %0 \n\t" :"=r"(firesim_rdcycle):);
++  *firesim_profile_buffer1 = firesim_rdcycle;
++  firesim_profile_buffer1 = firesim_profile_buffer1 + 1;
++
++
+   /* Read the object chunk. */
+   ClientConnection *conn = (ClientConnection *) context;
+   PlasmaRequestBuffer *buf = conn->transfer_queue.front();
+@@ -717,6 +735,10 @@
+     return;
+   }
+ 
++  strncpy(firesim_profile_taskid_buffer1, reinterpret_cast<const char *>(buf->object_id.id), 20);
++  firesim_profile_taskid_buffer1 += 20;
++
++
+   /* Seal the object and release it. The release corresponds to the call to
+    * plasma_create that occurred in process_data_request. */
+   LOG_DEBUG("reading on channel %d finished", data_sock);
+@@ -1607,6 +1629,39 @@
+ 
+ /* Report "success" to valgrind. */
+ void signal_handler(int signal) {
++  //======================Firesim porfiling=========================
++  time_t rawtime;
++  char buffer [255];
++
++  rawtime = time (NULL);
++  sprintf(buffer,"/home/plasma_process_data_chunk.prof.%d",(uintmax_t)rawtime );
++
++  FILE* prof_f1 = fopen(buffer, "w+");
++  if (prof_f1 == NULL)
++  {
++    printf("Error opening prof_f1 file!\n");
++    exit(1);
++  }
++
++  char* firesim_taskid_printer = firesim_profile_taskid_buffer_start1;
++  for (int i=0; i<FIRESIM_BUF_SIZE-64; i++)
++  {
++    fprintf(prof_f1, "%016lld,",firesim_profile_buffer_start1[i]);
++    if (firesim_profile_buffer_start1[i] == 0) break;
++    for (int j=0; j<20; j++)
++    {
++      fprintf(prof_f1,"%hhx", *firesim_taskid_printer);
++      firesim_taskid_printer++;
++    }
++    fprintf(prof_f1,"\n");
++  }
++
++  fclose(prof_f1);
++  free(firesim_profile_buffer_start1);
++  free(firesim_profile_taskid_buffer_start1);
++  //=================================================================
++
++
+   LOG_DEBUG("Signal was %d", signal);
+   if (signal == SIGTERM) {
+     if (g_manager_state) {
+@@ -1620,6 +1675,11 @@
+  * suite has its own declaration of main. */
+ #ifndef PLASMA_TEST
+ int main(int argc, char *argv[]) {
++  firesim_profile_buffer_start1 = (uint64_t*)aligned_alloc(64,FIRESIM_BUF_SIZE*sizeof(uint64_t));
++  firesim_profile_buffer1 = firesim_profile_buffer_start1;
++  firesim_profile_taskid_buffer_start1 = (char*)aligned_alloc(64,FIRESIM_BUF_SIZE*20*sizeof(char));
++  firesim_profile_taskid_buffer1 = firesim_profile_taskid_buffer_start1;
++
+   signal(SIGTERM, signal_handler);
+   /* Socket name of the plasma store this manager is connected to. */
+   char *store_socket_name = NULL;

@@ -1,5 +1,5 @@
 --- ray-ray-0.2.1/src/local_scheduler/local_scheduler.cc	2017-10-01 19:33:13.000000000 +0000
-+++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler.cc	2017-11-27 01:32:22.142953133 +0000
++++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler.cc	2017-11-28 04:26:43.433464284 +0000
 @@ -5,6 +5,7 @@
  #include <sys/un.h>
  #include <sys/wait.h>
@@ -73,8 +73,8 @@
 +  }
 +
 +  fclose(prof_f1);
-+  free(firesim_profile_buffer_start1);
-+  free(firesim_profile_taskid_buffer_start1);
++  //free(firesim_profile_buffer_start1);
++  //free(firesim_profile_taskid_buffer_start1);
 +  //==========================================================
 +  //==========================================================
 +
@@ -85,9 +85,9 @@
   * suite has its own declaration of main. */
  #ifndef LOCAL_SCHEDULER_TEST
  int main(int argc, char *argv[]) {
-+  firesim_profile_buffer_start1 = (uint64_t*)aligned_alloc(64,FIRESIM_BUF_SIZE*sizeof(uint64_t));
++  firesim_profile_buffer_start1 = (uint64_t*)calloc(FIRESIM_BUF_SIZE,sizeof(uint64_t));
 +  firesim_profile_buffer1 = firesim_profile_buffer_start1;
-+  firesim_profile_taskid_buffer_start1 = (char*)aligned_alloc(64,FIRESIM_BUF_SIZE*20*sizeof(char));
++  firesim_profile_taskid_buffer_start1 = (char*)calloc(FIRESIM_BUF_SIZE,20*sizeof(char));
 +  firesim_profile_taskid_buffer1 = firesim_profile_taskid_buffer_start1;
    signal(SIGTERM, signal_handler);
    /* Path of the listening socket of the local scheduler. */

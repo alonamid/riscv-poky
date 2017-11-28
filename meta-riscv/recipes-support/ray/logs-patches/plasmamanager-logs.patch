@@ -1,5 +1,5 @@
 --- ray-ray-0.2.1/src/plasma/plasma_manager.cc	2017-10-01 19:33:13.000000000 +0000
-+++ ray-ray-0.2.1-new/src/plasma/plasma_manager.cc	2017-11-27 01:32:22.143953135 +0000
++++ ray-ray-0.2.1-new/src/plasma/plasma_manager.cc	2017-11-28 04:27:38.160525787 +0000
 @@ -19,6 +19,7 @@
  #include <poll.h>
  #include <assert.h>
@@ -50,7 +50,7 @@
    /* Seal the object and release it. The release corresponds to the call to
     * plasma_create that occurred in process_data_request. */
    LOG_DEBUG("reading on channel %d finished", data_sock);
-@@ -1607,6 +1629,39 @@
+@@ -1607,6 +1629,38 @@
  
  /* Report "success" to valgrind. */
  void signal_handler(int signal) {
@@ -82,21 +82,20 @@
 +  }
 +
 +  fclose(prof_f1);
-+  free(firesim_profile_buffer_start1);
-+  free(firesim_profile_taskid_buffer_start1);
++  //free(firesim_profile_buffer_start1);
 +  //=================================================================
 +
 +
    LOG_DEBUG("Signal was %d", signal);
    if (signal == SIGTERM) {
      if (g_manager_state) {
-@@ -1620,6 +1675,11 @@
+@@ -1620,6 +1674,11 @@
   * suite has its own declaration of main. */
  #ifndef PLASMA_TEST
  int main(int argc, char *argv[]) {
-+  firesim_profile_buffer_start1 = (uint64_t*)aligned_alloc(64,FIRESIM_BUF_SIZE*sizeof(uint64_t));
++  firesim_profile_buffer_start1 = (uint64_t*)calloc(FIRESIM_BUF_SIZE,sizeof(uint64_t));
 +  firesim_profile_buffer1 = firesim_profile_buffer_start1;
-+  firesim_profile_taskid_buffer_start1 = (char*)aligned_alloc(64,FIRESIM_BUF_SIZE*20*sizeof(char));
++  firesim_profile_taskid_buffer_start1 = (char*)aligned_alloc(FIRESIM_BUF_SIZE,20*sizeof(char));
 +  firesim_profile_taskid_buffer1 = firesim_profile_taskid_buffer_start1;
 +
    signal(SIGTERM, signal_handler);

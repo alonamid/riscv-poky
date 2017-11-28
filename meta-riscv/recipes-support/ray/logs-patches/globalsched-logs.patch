@@ -1,5 +1,5 @@
 --- ray-ray-0.2.1/src/global_scheduler/global_scheduler.cc	2017-10-01 19:33:13.000000000 +0000
-+++ ray-ray-0.2.1-new/src/global_scheduler/global_scheduler.cc	2017-11-27 01:32:22.141953131 +0000
++++ ray-ray-0.2.1-new/src/global_scheduler/global_scheduler.cc	2017-11-28 04:27:17.586502666 +0000
 @@ -1,6 +1,8 @@
  #include <getopt.h>
  #include <signal.h>
@@ -80,8 +80,8 @@
 +    fprintf(prof_f1,"\n");
 +  }
 +  fclose(prof_f1);
-+  free(firesim_profile_buffer_start1);
-+  free(firesim_profile_taskid_buffer_start1);
++  //free(firesim_profile_buffer_start1);
++  //free(firesim_profile_taskid_buffer_start1);
 +//===========================================================================
 +
    if (signal == SIGTERM) {
@@ -91,9 +91,9 @@
  }
  
  int main(int argc, char *argv[]) {
-+  firesim_profile_buffer_start1 = (uint64_t*)aligned_alloc(64,FIRESIM_BUF_SIZE*sizeof(uint64_t));
++  firesim_profile_buffer_start1 = (uint64_t*)calloc(FIRESIM_BUF_SIZE,sizeof(uint64_t));
 +  firesim_profile_buffer1 = firesim_profile_buffer_start1;
-+  firesim_profile_taskid_buffer_start1 = (char*)aligned_alloc(64,FIRESIM_BUF_SIZE*20*sizeof(char));
++  firesim_profile_taskid_buffer_start1 = (char*)calloc(FIRESIM_BUF_SIZE,20*sizeof(char));
 +  firesim_profile_taskid_buffer1 = firesim_profile_taskid_buffer_start1;
    signal(SIGTERM, signal_handler);
    /* IP address and port of the primary redis instance. */

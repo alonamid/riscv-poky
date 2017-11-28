@@ -1,5 +1,5 @@
 --- ray-ray-0.2.1/src/local_scheduler/local_scheduler_client.cc	2017-10-01 19:33:13.000000000 +0000
-+++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler_client.cc	2017-11-27 01:32:22.142953133 +0000
++++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler_client.cc	2017-11-28 04:26:52.735474739 +0000
 @@ -8,6 +8,14 @@
  #include <stdlib.h>
  #include <sys/types.h>
@@ -19,9 +19,9 @@
      ActorID actor_id,
      bool is_worker,
      int64_t num_gpus) {
-+  firesim_profile_buffer_start2 = (uint64_t*)aligned_alloc(64,FIRESIM_BUF_SIZE*sizeof(uint64_t));
++  firesim_profile_buffer_start2 = (uint64_t*)calloc(FIRESIM_BUF_SIZE,sizeof(uint64_t));
 +  firesim_profile_buffer2 = firesim_profile_buffer_start2;
-+  firesim_profile_taskid_buffer_start2 = (char*)aligned_alloc(64,FIRESIM_BUF_SIZE*20*sizeof(char));
++  firesim_profile_taskid_buffer_start2 = (char*)calloc(FIRESIM_BUF_SIZE,20*sizeof(char));
 +  firesim_profile_taskid_buffer2 = firesim_profile_taskid_buffer_start2;
    LocalSchedulerConnection *result = new LocalSchedulerConnection();
    result->conn = connect_ipc_sock_retry(local_scheduler_socket, -1, -1);

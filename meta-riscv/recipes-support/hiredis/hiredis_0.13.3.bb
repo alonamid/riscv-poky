@@ -27,7 +27,7 @@ do_install_prepend() {
 S = "${WORKDIR}/hiredis-0.13.3/"
 
 
-EXTRA_OEMAKE_class-target += "LIBTOOLFLAGS='--tag=CC' CC='"/home/centos/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/riscv64-poky-linux/riscv64-poky-linux-gcc"' STLIB_CMD='"/home/centos/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/riscv64-poky-linux/riscv64-poky-linux-gcc-ar -rs"'"
+EXTRA_OEMAKE_class-target += "LIBTOOLFLAGS='--tag=CC' CC='"${WORKDIR}/recipe-sysroot-native/usr/bin/riscv64-poky-linux/riscv64-poky-linux-gcc"' STLIB_CMD='"${WORKDIR}/recipe-sysroot-native/usr/bin/riscv64-poky-linux/riscv64-poky-linux-gcc-ar -rs"'"
 
 inherit autotools
 

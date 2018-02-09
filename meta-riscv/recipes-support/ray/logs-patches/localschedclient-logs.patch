@@ -1,0 +1,86 @@
+--- ray-ray-0.2.1/src/local_scheduler/local_scheduler_client.cc	2017-10-01 19:33:13.000000000 +0000
++++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler_client.cc	2017-11-28 04:26:52.735474739 +0000
+@@ -8,6 +8,14 @@
+ #include <stdlib.h>
+ #include <sys/types.h>
+ #include <unistd.h>
++#include <time.h>
++
++#define FIRESIM_BUF_SIZE 100000
++
++uint64_t* firesim_profile_buffer2;
++uint64_t* firesim_profile_buffer_start2;
++char* firesim_profile_taskid_buffer2;
++char* firesim_profile_taskid_buffer_start2;
+ 
+ LocalSchedulerConnection *LocalSchedulerConnection_init(
+     const char *local_scheduler_socket,
+@@ -15,6 +23,10 @@
+     ActorID actor_id,
+     bool is_worker,
+     int64_t num_gpus) {
++  firesim_profile_buffer_start2 = (uint64_t*)calloc(FIRESIM_BUF_SIZE,sizeof(uint64_t));
++  firesim_profile_buffer2 = firesim_profile_buffer_start2;
++  firesim_profile_taskid_buffer_start2 = (char*)calloc(FIRESIM_BUF_SIZE,20*sizeof(char));
++  firesim_profile_taskid_buffer2 = firesim_profile_taskid_buffer_start2;
+   LocalSchedulerConnection *result = new LocalSchedulerConnection();
+   result->conn = connect_ipc_sock_retry(local_scheduler_socket, -1, -1);
+   result->actor_id = actor_id;
+@@ -61,6 +73,37 @@
+ void LocalSchedulerConnection_free(LocalSchedulerConnection *conn) {
+   close(conn->conn);
+   delete conn;
++  //=======================Firesim Profiling==============================
++  time_t rawtime;
++  char buffer [255];
++
++  rawtime = time (NULL);
++  sprintf(buffer,"/home/local_scheduler_submit.prof.%d",(uintmax_t)rawtime );
++
++  FILE* prof_f = fopen(buffer, "w+");
++  if (prof_f == NULL)
++  {
++    printf("Error opening prof_f file!\n");
++    exit(1);
++  }
++
++  char* firesim_taskid_printer = firesim_profile_taskid_buffer_start2;
++  for (int i=0; i<FIRESIM_BUF_SIZE-64; i++)
++  {
++    fprintf(prof_f, "%016lld,",firesim_profile_buffer_start2[i]);
++    if (firesim_profile_buffer_start2[i] == 0) break;
++    for (int j=0; j<20; j++)
++    {
++      fprintf(prof_f,"%hhx", *firesim_taskid_printer);
++      firesim_taskid_printer++;
++    }
++    fprintf(prof_f,"\n");
++  }
++
++  free(firesim_profile_buffer_start2);
++  free(firesim_profile_taskid_buffer_start2);
++  //======================================================================
++
+ }
+ 
+ void local_scheduler_disconnect_client(LocalSchedulerConnection *conn) {
+@@ -90,6 +133,19 @@
+ void local_scheduler_submit(LocalSchedulerConnection *conn,
+                             TaskSpec *task,
+                             int64_t task_size) {
++
++  //get the cycle count
++  //store the cycle count in the buffer
++  //increase the buffer pointer by a word
++  uint64_t firesim_rdcycle;
++  asm volatile ("rdcycle %0 \n\t" :"=r"(firesim_rdcycle):);
++  *firesim_profile_buffer2 = firesim_rdcycle;
++  firesim_profile_buffer2 = firesim_profile_buffer2 + 1;
++
++  strncpy(firesim_profile_taskid_buffer2, reinterpret_cast<const char *>(TaskSpec_task_id(task).id), 20);
++  firesim_profile_taskid_buffer2 += 20;
++
++
+   write_message(conn->conn, MessageType_SubmitTask, task_size,
+                 (uint8_t *) task);
+ }

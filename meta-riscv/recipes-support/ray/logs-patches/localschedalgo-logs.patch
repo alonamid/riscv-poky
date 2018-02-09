@@ -1,0 +1,19 @@
+--- ray-ray-0.2.1/src/local_scheduler/local_scheduler_algorithm.cc	2017-10-01 19:33:13.000000000 +0000
++++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler_algorithm.cc	2017-11-27 01:32:22.142953133 +0000
+@@ -691,6 +691,16 @@
+  */
+ void dispatch_tasks(LocalSchedulerState *state,
+                     SchedulingAlgorithmState *algorithm_state) {
++
++/*
++   uint64_t firesim_rdcycle;
++   asm volatile ("rdcycle %0 \n\t" :"=r"(firesim_rdcycle):);
++
++
++   *firesim_profile_buffer1 = firesim_rdcycle;
++   firesim_profile_buffer1 = firesim_profile_buffer1 + 1;
++*/ 
++
+   /* Assign as many tasks as we can, while there are workers available. */
+   for (auto it = algorithm_state->dispatch_task_queue->begin();
+        it != algorithm_state->dispatch_task_queue->end();) {

@@ -10,6 +10,16 @@ SRC_URI = "\
 SRC_URI[md5sum] = "6ec41e46a77b762fbb3c8e9079d26223"
 SRC_URI[sha256sum] = "544a5ce29fb802a7ef20e28b3eb3e872946fd452cf25aa1dbfa2a78344ee4951"
 
+SRC_URI_append += "file://top-cmake.patch;striplevel=1"
+SRC_URI_append += "file://top-build.patch;striplevel=1"
+SRC_URI_append += "file://common-common-cmake.patch;striplevel=1"
+SRC_URI_append += "file://common-top-cmake.patch;striplevel=1"
+SRC_URI_append += "file://globalsched-cmake.patch;striplevel=1"
+SRC_URI_append += "file://hiredis-make.patch;striplevel=1"
+SRC_URI_append += "file://localsched-cmake.patch;striplevel=1"
+SRC_URI_append += "file://plasma-cmake.patch;striplevel=1"
+SRC_URI_append += "file://redismodule-top-cmake.patch;striplevel=1"
+
 
 S = "${WORKDIR}/ray-ray-0.2.1/"
 
@@ -17,11 +27,6 @@ S = "${WORKDIR}/ray-ray-0.2.1/"
 DEPENDS += "redis boost python python-native python-numpy-native python-cython python-cython-native flatbuffers flatbuffers-native apache-arrow cmake cmake-native"
 DEPENDS += "python-pip python-setuptools python-cython python-six python-pytest python-pandas jemalloc python-pyarrow python-flatbuffers"
 DEPENDS += "python-redis python-cloudpickle python-click python-funcsigs python-psutil python-numpy"
-DEPENDS += ""
-DEPENDS += ""
-DEPENDS += ""
-DEPENDS += ""
-DEPENDS += ""
 
 inherit cmake texinfo
 
@@ -49,7 +54,7 @@ cmake_do_install() {
 }
 
 
-EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release -DCMAKE_LINKER=/home/centos/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/riscv64-poky-linux/riscv64-poky-linux-ld -DPYTHON_EXECUTABLE=~/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/python-native/python2.7 -DFLATBUFFERS_COMPILER:FILEPATH=~/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/ray/0.2.1-r0/recipe-sysroot-native/usr/bin/flatc"
+EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=${WORKDIR}/recipe-sysroot-native/usr/bin/python-native/python2.7 -DFLATBUFFERS_COMPILER:FILEPATH=${WORKDIR}/recipe-sysroot-native/usr/bin/flatc"
 
 EXTRA_OEMAKE += "LIBTOOLFLAGS='--tag=CC'"
 

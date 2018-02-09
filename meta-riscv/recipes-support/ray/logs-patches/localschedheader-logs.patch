@@ -1,0 +1,10 @@
+--- ray-ray-0.2.1/src/local_scheduler/local_scheduler_shared.h	2017-10-01 19:33:13.000000000 +0000
++++ ray-ray-0.2.1-new/src/local_scheduler/local_scheduler_shared.h	2017-11-27 01:32:22.142953133 +0000
+@@ -130,4 +130,7 @@
+  */
+ void LocalSchedulerState_free(LocalSchedulerState *state);
+ 
++
++extern uint64_t* firesim_profile_buffer1;
++
+ #endif /* LOCAL_SCHEDULER_SHARED_H */

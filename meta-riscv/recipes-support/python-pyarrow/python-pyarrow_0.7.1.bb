@@ -17,6 +17,10 @@ SRC_URI = "\
 SRC_URI[md5sum] = "83877894c7a5e3261350c3b02f1caac8"
 SRC_URI[sha256sum] = "22667b9d3f4d36c2060d5ade8c904c528325ea4ffcea2e71671013addcd033af"
 
+SRC_URI_append += "file://top-cmake.patch;striplevel=2"
+SRC_URI_append += "file://findarrow-cmake.patch;striplevel=2"
+SRC_URI_append += "file://findplasma-cmake.patch;striplevel=2"
+
 S = "${WORKDIR}/arrow-apache-arrow-0.7.1/python" 
 
 DEPENDS += "boost python python-native python-numpy-native python-cython python-cython-native flatbuffers flatbuffers-native apache-arrow cmake cmake-native"
@@ -104,13 +108,6 @@ distutils_do_install() {
         fi
 
 }
-
-
-
-
-
-
-
 
 
 EXTRA_OEMAKE = "LIBTOOLFLAGS='--tag=CC'"

@@ -57,7 +57,7 @@ cmake_do_install() {
 
 
 
-EXTRA_OECMAKE += "-DARROW_PLASMA=on -DARROW_PYTHON=on -DPYTHON_EXECUTABLE=~/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/apache-arrow/0.7.1-r0/recipe-sysroot-native/usr/bin/python-native/python2.7 -DARROW_WITH_BROTLI=off -DARROW_WITH_LZ4=off -DARROW_WITH_SNAPPY=off -DARROW_WITH_ZLIB=off -DARROW_WITH_ZSTD=off -DFLATBUFFERS_COMPILER:FILEPATH=~/firesim/sw/firesim-software/riscv-poky/build/tmp/work/riscv64-poky-linux/apache-arrow/0.7.1-r0/recipe-sysroot-native/usr/bin/flatc"
+EXTRA_OECMAKE += "-DARROW_PLASMA=on -DARROW_PYTHON=on -DPYTHON_EXECUTABLE=${WORKDIR}/recipe-sysroot-native/usr/bin/python-native/python2.7 -DARROW_WITH_BROTLI=off -DARROW_WITH_LZ4=off -DARROW_WITH_SNAPPY=off -DARROW_WITH_ZLIB=off -DARROW_WITH_ZSTD=off -DFLATBUFFERS_COMPILER:FILEPATH=${WORKDIR}/recipe-sysroot-native/usr/bin/flatc"
 
 #EXTRA_OEMAKE_class-target = "LIBTOOLFLAGS='--tag=CC'"
 EXTRA_OEMAKE = "LIBTOOLFLAGS='--tag=CC'"
